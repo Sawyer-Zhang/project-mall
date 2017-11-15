@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mymmall.dao.UserMapper" >
   <resultMap id="BaseResultMap" type="com.mymmall.pojo.User" >
     <constructor >
@@ -151,4 +152,78 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="checkUsername" parameterType="String" resultType="int">
+    SELECT count(1) from mmall_user
+    WHERE username = #{username};
+
+  </select>
+
+  <select id="checkEmail" parameterType="String" resultType="int">
+    SELECT COUNT(1) FROM mmall_user
+    WHERE email = #{email};
+
+  </select>
+
+  <select id="checkEmailByUserId" parameterType="map" resultType="int">
+    SELECT COUNT(1) FROM mmall_user
+    WHERE email = #{email}
+    and id != #{userId};
+
+
+  </select>
+  <select id="selectLogin" parameterType="map" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"></include>
+    FROM
+    mmall_user
+    WHERE
+    username = #{username}
+    and
+    password = #{password};
+
+  </select>
+
+  <select id="selectQuestionByUsername" parameterType="string" resultType="string">
+    SELECT
+    question
+    FROM
+    mmall_user
+    WHERE
+    username = #{username};
+
+  </select>
+
+  <select id="checkAnswer" parameterType="map" resultType="int">
+    SELECT
+    COUNT(1)
+    FROM
+    mmall_user
+    WHERE
+    username = #{username}
+    and
+    question = #{question}
+    and
+    answer = #{answer};
+
+  </select>
+  <update id="updatePasswordByUsername" parameterType="map">
+    UPDATE mmall_user
+    SET password = #{newPassword},
+    update_time = now()
+    WHERE username=#{username}
+
+  </update>
+  
+  <select id="checkPassword" parameterType="map" resultType="int">
+    SELECT
+    COUNT(1)
+    FROM
+    mmall_user
+    WHERE
+    password = #{oldPassword}
+    AND
+    id = #{userId};
+
+  </select>
 </mapper>
